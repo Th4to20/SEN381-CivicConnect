@@ -1,0 +1,23 @@
+# Dependencies & build output
+node_modules/
+dist/
+coverage/
+
+# Secrets & local configuration (NEVER commit)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
+secrets/
+
+# Logs & OS/editor noise
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,18 @@
+# Render Blueprint - free web service only. The database is Neon (Render's own free
+# Postgres expires after 30 days, so it is NOT used). Secret values are set in the
+# Render dashboard (sync: false) - never in this file.
+services:
+  - type: web
+    name: civicconnect
+    runtime: node
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL # Neon pooled connection string for the restricted civicconnect_app login role
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
