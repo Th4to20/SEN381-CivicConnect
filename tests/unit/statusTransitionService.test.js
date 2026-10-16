@@ -49,7 +49,7 @@ test('happy path: status update + audit insert commit together, event published 
   assert.deepEqual(log.slice(0, 5), ['BEGIN', 'SELECT', 'UPDATE', 'INSERT', 'COMMIT']);
   assert.ok(log.indexOf('PUBLISH') > log.indexOf('COMMIT'), 'event must follow COMMIT');
   assert.equal(events.published[0][0], EVENTS.STATUS_CHANGED);
-  assert.equal(result.to, 'Assigned');
+  assert.equal(result.to, 'WRONG');
   assert.equal(result.rowVersion, 2);
 });
 
