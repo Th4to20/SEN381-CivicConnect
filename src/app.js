@@ -1,5 +1,5 @@
 import express from 'express';
-import { healthRouter } from './routes/health.js';
+import { healthRouter } from './routes/health.js';import { versionRouter } from './routes/version.js';
 import { DomainError } from './errors.js';
 
 export function createApp({ pool }) {
@@ -7,6 +7,7 @@ export function createApp({ pool }) {
   app.disable('x-powered-by');
   app.use(express.json());
   app.use(healthRouter(pool));
+  app.use(versionRouter());
   // Feature routers (requests, staff queue, reports) are mounted here as they are built (M2/M3).
 
   app.use((err, _req, res, _next) => {
