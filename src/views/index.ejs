@@ -1,0 +1,130 @@
+<%
+  const categories = [
+    'Maintenance', 'Facility Fault', 'Security Concern', 'IT Support',
+    'Damaged Equipment', 'Lost Property', 'Other'
+  ];
+  const v = (typeof values !== 'undefined' && values) ? values : {};
+  const errs = (typeof errors !== 'undefined' && errors) ? errors : {};
+  const errorFields = Object.keys(errs);
+  const ref = (typeof reference !== 'undefined' && reference) ? reference : null;
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Report a problem | CivicConnect</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#request-form">Skip to the form</a>
+
+  <header class="site-header">
+    <div class="wrap"><p class="brand">CivicConnect</p></div>
+  </header>
+
+  <main class="wrap">
+    <section class="intro">
+      <h1>Report a problem</h1>
+      <p>Tell us what needs attention and where. You will get a reference number so you can check progress later.</p>
+    </section>
+
+    <% if (ref) { %>
+      <div class="notice notice--success" role="status">
+        <p class="notice__title">Request submitted</p>
+        <p>Your reference number is <strong><%= ref %></strong>. Keep it to check the status of your request.</p>
+      </div>
+    <% } %>
+
+    <% if (errorFields.length) { %>
+      <div class="notice notice--error" role="alert" tabindex="-1" id="error-summary">
+        <p class="notice__title">Fix <%= errorFields.length === 1 ? 'this problem' : 'these problems' %> and submit again</p>
+        <ul>
+          <% errorFields.forEach(function (field) { %>
+            <li><a href="#<%= field %>"><%= errs[field] %></a></li>
+          <% }) %>
+        </ul>
+      </div>
+    <% } %>
+
+    <form id="request-form" class="form" action="/api/requests" method="POST" enctype="multipart/form-data">
+
+      <div class="form__row">
+        <div class="field <%= errs.category ? 'field--error' : '' %>">
+          <label for="category">Category</label>
+          <select id="category" name="category" required <%- errs.category ? 'aria-invalid="true" aria-describedby="category-error"' : '' %>>
+            <option value="" disabled <%= v.category ? '' : 'selected' %>>Select a category</option>
+            <% categories.forEach(function (c) { %>
+              <option value="<%= c %>" <%= v.category === c ? 'selected' : '' %>><%= c %></option>
+            <% }) %>
+          </select>
+          <% if (errs.category) { %><p class="field__error" id="category-error"><%= errs.category %></p><% } %>
+        </div>
+
+        <div class="field <%= errs.location ? 'field--error' : '' %>">
+          <label for="location">Location</label>
+          <input type="text" id="location" name="location" required maxlength="200"
+                 autocomplete="off" placeholder="e.g. Block C, second floor corridor"
+                 value="<%= v.location || '' %>"
+                 <%- errs.location ? 'aria-invalid="true" aria-describedby="location-error"' : '' %>>
+          <% if (errs.location) { %><p class="field__error" id="location-error"><%= errs.location %></p><% } %>
+        </div>
+      </div>
+
+      <div class="field <%= errs.description ? 'field--error' : '' %>">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="6" required maxlength="2000"
+                  aria-describedby="description-hint<%= errs.description ? ' description-error' : '' %>"
+                  <%- errs.description ? 'aria-invalid="true"' : '' %>><%= v.description || '' %></textarea>
+        <p class="field__hint" id="description-hint">What is wrong, and anything that helps us find or fix it. If you chose Other, say what kind of problem it is.</p>
+        <% if (errs.description) { %><p class="field__error" id="description-error"><%= errs.description %></p><% } %>
+      </div>
+
+      <div class="field <%= errs.attachment ? 'field--error' : '' %>">
+        <label for="attachment">Photo or document <span class="optional">(optional)</span></label>
+        <input type="file" id="attachment" name="attachment"
+               accept="image/jpeg,image/png,image/webp,application/pdf"
+               aria-describedby="attachment-hint<%= errs.attachment ? ' attachment-error' : '' %>"
+               <%- errs.attachment ? 'aria-invalid="true"' : '' %>>
+        <p class="field__hint" id="attachment-hint">JPG, PNG, WebP or PDF, up to 5 MB.</p>
+        <p class="field__error" id="attachment-error" <%- errs.attachment ? '' : 'hidden' %>><%= errs.attachment || '' %></p>
+      </div>
+
+      <div class="form__actions">
+        <button type="submit" class="button">Submit request</button>
+      </div>
+    </form>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap"><p>Do not use this form for emergencies. Call your local emergency number instead.</p></div>
+  </footer>
+
+  <script>
+    (function () {
+      var MAX_BYTES = 5 * 1024 * 1024;
+      var input = document.getElementById('attachment');
+      var error = document.getElementById('attachment-error');
+      var field = input.closest('.field');
+      input.addEventListener('change', function () {
+        var file = input.files[0];
+        if (file && file.size > MAX_BYTES) {
+          input.value = '';
+          error.textContent = 'That file is larger than 5 MB. Choose a smaller file.';
+          error.hidden = false;
+          field.classList.add('field--error');
+          input.setAttribute('aria-invalid', 'true');
+          input.setAttribute('aria-describedby', 'attachment-hint attachment-error');
+        } else {
+          error.hidden = true;
+          field.classList.remove('field--error');
+          input.removeAttribute('aria-invalid');
+        }
+      });
+      var summary = document.getElementById('error-summary');
+      if (summary) summary.focus();
+    })();
+  </script>
+</body>
+</html>

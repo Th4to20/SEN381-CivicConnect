@@ -8,6 +8,10 @@ export function createApp({ pool, events }) {
   const app = express();
   app.disable('x-powered-by');
   app.use(express.json());
+  app.set('view engine', 'ejs');
+  app.set('views', './src/views');
+    app.use(express.static('public'));
+    app.get('/', (req, res) => res.render('index'));
   app.use(healthRouter(pool));
   app.use(versionRouter());
   app.use(requestsRouter({ pool, events }));

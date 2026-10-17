@@ -1,0 +1,268 @@
+/* CivicConnect request form. Plain CSS, mobile first, no framework. */
+
+:root {
+  --ink: #14213d;
+  --ink-soft: #4a5568;
+  --blue: #1d3a8a;
+  --blue-dark: #152c6b;
+  --signal: #f2b705;
+  --page: #eef1f6;
+  --surface: #ffffff;
+  --line: #c5ccd9;
+  --error: #b3261e;
+  --error-bg: #fdecea;
+  --success: #1b6e3c;
+  --success-bg: #e6f4ea;
+  --radius: 6px;
+  --font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #e8ecf5;
+    --ink-soft: #aab4c8;
+    --blue: #8aa4f0;
+    --blue-dark: #a9bcf5;
+    --page: #0f1626;
+    --surface: #18223a;
+    --line: #3a4766;
+    --error: #ff8a80;
+    --error-bg: #3a1c1a;
+    --success: #7fd69b;
+    --success-bg: #17301f;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--page);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.wrap {
+  width: 100%;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -4rem;
+  padding: 0.6rem 1rem;
+  background: var(--surface);
+  color: var(--ink);
+  border: 2px solid var(--blue);
+  border-radius: var(--radius);
+  z-index: 10;
+}
+.skip-link:focus { top: 0.5rem; }
+
+/* Header and footer */
+.site-header {
+  background: var(--blue);
+  border-bottom: 4px solid var(--signal);
+  padding-top: env(safe-area-inset-top);
+}
+.brand {
+  margin: 0;
+  padding: 0.9rem 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+}
+
+.site-footer {
+  margin-top: 2rem;
+  padding: 1.25rem 0 calc(1.25rem + env(safe-area-inset-bottom));
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+.site-footer p { margin: 0; }
+
+/* Intro */
+.intro { padding: 1.75rem 0 1.25rem; }
+.intro h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+.intro p { margin: 0; max-width: 36rem; color: var(--ink-soft); }
+
+/* Notices */
+.notice {
+  margin: 0 0 1.25rem;
+  padding: 0.9rem 1rem;
+  border-left: 4px solid;
+  border-radius: var(--radius);
+}
+.notice p { margin: 0; }
+.notice__title { font-weight: 700; margin-bottom: 0.25rem !important; }
+.notice ul { margin: 0.4rem 0 0; padding-left: 1.2rem; }
+.notice a { color: inherit; font-weight: 600; }
+.notice:focus { outline: 3px solid var(--blue); outline-offset: 2px; }
+.notice--error { background: var(--error-bg); border-color: var(--error); color: var(--ink); }
+.notice--success { background: var(--success-bg); border-color: var(--success); color: var(--ink); }
+
+/* Form panel */
+.form {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--signal);
+  border-radius: var(--radius);
+  padding: 1.25rem 1rem 1.5rem;
+}
+
+.form__row { display: grid; gap: 1.25rem; }
+
+.field { margin-bottom: 1.25rem; min-width: 0; }
+.form__row .field { margin-bottom: 0; }
+.form__row { margin-bottom: 1.25rem; }
+
+label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+}
+.optional { font-weight: 400; color: var(--ink-soft); }
+
+/* Inputs: 16px+ text avoids iOS zoom on focus; 48px tall for touch */
+input[type="text"],
+select,
+textarea {
+  display: block;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.65rem 0.8rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+textarea { min-height: 9rem; resize: vertical; }
+input::placeholder, textarea::placeholder { color: var(--ink-soft); opacity: 0.8; }
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.5rem;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--ink-soft) 50%),
+    linear-gradient(135deg, var(--ink-soft) 50%, transparent 50%);
+  background-position: calc(100% - 1.2rem) 50%, calc(100% - 0.85rem) 50%;
+  background-size: 0.4rem 0.4rem, 0.4rem 0.4rem;
+  background-repeat: no-repeat;
+}
+select:invalid { color: var(--ink-soft); }
+select option { color: var(--ink); }
+
+input[type="text"]:hover, select:hover, textarea:hover { border-color: var(--ink-soft); }
+
+input:focus-visible, select:focus-visible, textarea:focus-visible,
+input[type="file"]:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+  border-color: var(--blue);
+}
+
+/* File input */
+input[type="file"] {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1.5px dashed var(--line);
+  border-radius: var(--radius);
+}
+input[type="file"]::file-selector-button {
+  margin-right: 0.75rem;
+  min-height: 2.5rem;
+  padding: 0.4rem 0.9rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--blue);
+  background: transparent;
+  border: 1.5px solid var(--blue);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+input[type="file"]::file-selector-button:hover { background: var(--page); }
+
+/* Hints and errors */
+.field__hint, .field__error { margin: 0.35rem 0 0; font-size: 0.9rem; }
+.field__hint { color: var(--ink-soft); }
+.field__error { color: var(--error); font-weight: 600; }
+.field__error[hidden] { display: none; }
+
+.field--error input[type="text"],
+.field--error select,
+.field--error textarea,
+.field--error input[type="file"] {
+  border-color: var(--error);
+  border-style: solid;
+}
+
+/* Submit */
+.form__actions { margin-top: 1.5rem; }
+.button {
+  display: block;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.7rem 1.5rem;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: var(--blue);
+  border: 2px solid var(--blue);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.button:hover { background: var(--blue-dark); border-color: var(--blue-dark); }
+.button:focus-visible { outline: 3px solid var(--signal); outline-offset: 3px; }
+.button:active { transform: translateY(1px); }
+
+@media (prefers-color-scheme: dark) {
+  .button { color: #0f1626; }
+  .button:hover { color: #0f1626; }
+}
+
+/* Tablet and desktop */
+@media (min-width: 40rem) {
+  .wrap { padding: 0 1.5rem; }
+  .intro { padding: 2.5rem 0 1.5rem; }
+  .intro h1 { font-size: 2.1rem; }
+  .form { padding: 2rem 2rem 2.25rem; }
+  .form__row { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .button { display: inline-block; width: auto; min-width: 12rem; }
+}
+
+/* Very small screens */
+@media (max-width: 22rem) {
+  .wrap { padding: 0 0.75rem; }
+  .form { padding: 1rem 0.75rem 1.25rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
